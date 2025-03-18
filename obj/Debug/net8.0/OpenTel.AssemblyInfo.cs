@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OpenTel")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3d7b642652947c24d0af7b26c920dc00ad8d3d5c")]
 [assembly: System.Reflection.AssemblyProductAttribute("OpenTel")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OpenTel")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
