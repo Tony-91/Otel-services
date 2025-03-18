@@ -1,0 +1,35 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push" # Send logs to Loki
+
+processors:
+  batch: # Batch logs to reduce load
+  resource: # Add resource metadata (container name, service name)
+    attributes:
+      - key: service.name
+        value: "otel-collector"
+        action: insert
+      - key: job
+        value: "otel-collector"
+        action: insert
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:55681 # Standard health check port
+
+service:
+  extensions: [health_check]
+  pipelines:
+    logs:
+      receivers: [otlp] # Receive logs via OTLP (both HTTP & gRPC)
+      processors: [batch, resource] # Process logs in batches
+      exporters: [loki] # Export logs to Loki
+

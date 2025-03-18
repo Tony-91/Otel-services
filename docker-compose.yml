@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  # Loki: Log Aggregation Service
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100" # Expose Loki's port to localhost
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config.yaml # Configuration file
+    restart: always
+
+  # Grafana: Visualization Platform
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000" # Expose Grafana UI on port 3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Set the admin password for Grafana
+    depends_on:
+      - loki # Wait for Loki to be ready before starting Grafana
+    restart: always
+
+  # OpenTelemetry Collector: Collect logs and export them to Loki
+  opentelemetry-collector:
+    image: otel/opentelemetry-collector-contrib:latest # Use the Contrib image
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    command: --config /etc/otel-collector-config.yaml
+    # command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    ports:
+      - "4317:4317" # For OTLP gRPC
+      - "4318:4318" # For OTLP HTTP
+      - "55681:55681" # For OTLP HTTP
+    depends_on:
+      - loki
